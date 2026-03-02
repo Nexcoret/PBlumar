@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- === CONFIGURACIÓN PARA VERSE COMO APLICACIÓN === -->
+  <meta name="theme-color" content="#003087">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <title>Blumar • Funciones por Puesto</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  
+  <style>
+    body { font-family: system-ui, sans-serif; }
+    .card-hover { transition: all 0.3s; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3); }
+    .modal { animation: modalPop 0.3s ease-out; }
+    @keyframes modalPop { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  </style>
+</head>
+<body class="bg-slate-950 text-white min-h-screen">
+
+  <!-- HEADER -->
+  <header class="bg-[#003087] py-6 shadow-lg">
+    <div class="max-w-7xl mx-auto px-6 flex items-center gap-4">
+      <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-4xl shadow-inner">🔒</div>
+      <div>
+        <h1 class="text-4xl font-bold tracking-tight">Blumar S.A.</h1>
+        <p class="text-[#00A3E0] text-lg -mt-1">Servicio de Seguridad Privada</p>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-6 py-10">
+    <h2 class="text-5xl font-bold text-center mb-4">Funciones por Puesto</h2>
+    <p class="text-center text-xl text-slate-400 mb-12">Selecciona tu puesto</p>
+
+    <!-- GRID DE PUESTOS -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6" id="puestos-grid">
+      <!-- Se generan automáticamente -->
+    </div>
+  </div>
+
+  <!-- MODAL -->
+  <div id="modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+    <div class="modal bg-slate-900 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+      
+      <!-- Modal Header -->
+      <div class="bg-[#003087] px-8 py-6 flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span id="modal-icon" class="text-5xl"></span>
+          <h3 id="modal-title" class="text-3xl font-bold"></h3>
+        </div>
+        <button onclick="cerrarModal()" class="text-white text-5xl leading-none hover:text-[#00A3E0]">×</button>
+      </div>
+
+      <!-- Contenido -->
+      <div class="flex-1 overflow-y-auto p-8 text-lg leading-relaxed" id="modal-content">
+        <!-- Funciones aquí -->
+      </div>
+
+      <!-- Footer (solo botón Cerrar) -->
+      <div class="p-6 border-t border-slate-700">
+        <button onclick="cerrarModal()" 
+                class="w-full bg-[#00A3E0] hover:bg-[#00BFFF] text-black font-bold py-5 rounded-2xl text-2xl">
+          CERRAR
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const puestos = [
+      { id: 1, nombre: "Porteria", icon: "📋" },
+      { id: 2, nombre: "Puesto 2", icon: "🚚" },
+      { id: 3, nombre: "Lircay", icon: "🚪" },
+      { id: 4, nombre: "Puesto 4", icon: "📦" },
+      { id: 5, nombre: "Puesto 5", icon: "🅿️" },
+      { id: 6, nombre: "Insp. Food Defence", icon: "🛡️" }
+    ];
+
+    const funciones = {
+      1: ["Lleva el régimen de la instalación","Recepción camiones con carga","Chequeo documental, físico y apertura sello camión con carga materia prima","Despacho, revisión y liberación bins","Despacho esquelones","Chequeo documental y físico sellos","Control acceso y salida personal planta","Realiza reportabilidad en plataforma Vision (descarga productos, despacho bins y despacho esquelones)","Rondas por la instalación verificando funcionamiento de los puestos","Reportabilidad de los incidentes o situaciones especiales a supervisor de la instalación","Apoyo a portería Blumar cuando es requerido"],
+      2: ["Control acceso proveedores, casino, bodega, lavandería","Control acceso camión cajas productos terminado","Despacho camión productos terminado","Chequeo físico y documental sello camión producto terminado","Chequeo físico, documental y apertura sello camión cajas producto terminado","Operador sistema alarma planta","Cumplir con el llenado de formularios de acuerdo a procedimiento pesquera","Realiza funciones de recepcionista","Hacer la reportabilidad por visión de las novedades de acuerdo a protocolo","Coordinación escolta camión producto terminado con puesto 3","Manejo acceso personal vía PDA (hoy en día ingresos forzados)","CCTV sistema instalado"],
+      3: ["Control ingreso y salida personal","Control ingreso y salida visitas","Control y vigilancia patio estacionamiento","Despacho escolta producto terminado, a solicitud puesto 2","Control ingreso/salida camión petróleo para generador","Rondas por sector estacionamiento, galpón Principal y gimnasio","Activación y desactivación alarma edificio","Control ingreso y salida personal aseo","CCTV sistema instalado"],
+      4: ["Apoyo natural puesto 1","Encargado distribución colaciones y relevo colaciones","Recepción proveedores y vehículos menores de mantención general","Realiza rondas por 7 puntos específicos","Relevo natural del puesto 2","Apoyo durante el ingreso de personal al puesto 5","Control retiro y carguío camión deshechos","Control y supervisión descarga sal","Control y supervisión contratistas","Reportabilidad por Vision de acuerdo a protocolos"],
+      5: ["Control ingreso y salida vehículos personal planta","Control acceso y salida vehículos visitas","Realizar rondas verificando estado de vehículos","Informar cualquier situación anormal que presente algún vehículo","Control acceso y salida bodega materiales flota","Control CCTV","Control contratistas","Rondas por 4 puntos establecidos","Generar la reportabilidad por visión","Registrar en bitácora los ingresos y salidas"],
+      6: ["Realiza rondas por edificio principal (áreas esenciales: casino, vestidores, casilleros personal, baños, laboratorios y pasillos de tránsito)","Control personal acceso planta proceso vía pórtico detector de metales y con Garrett manual al detectarse algún objeto extraño","Pruebas de pórtico y Garrett manual antes de los controles","Revisión de bolsos a la salida del personal","Efectuar la reportabilidad de cualquier incidencia","Dar cumplimiento a protocolos Food Defence y DGAC para sus funciones","Llevar al día la reportabilidad auditable de acuerdo a protocolos"]
+    };
+
+    // Generar tarjetas
+    const grid = document.getElementById('puestos-grid');
+    puestos.forEach(p => {
+      const div = document.createElement('div');
+      div.className = `card-hover bg-slate-900 rounded-3xl p-8 text-center cursor-pointer border border-slate-700`;
+      div.innerHTML = `
+        <div class="text-7xl mb-6">${p.icon}</div>
+        <h3 class="text-2xl font-bold">${p.nombre}</h3>
+        <p class="text-slate-400 mt-2 text-sm">Toca para ver funciones</p>
+      `;
+      div.onclick = () => abrirModal(p.id, p.nombre, p.icon);
+      grid.appendChild(div);
+    });
+
+    function abrirModal(id, nombre, icon) {
+      document.getElementById('modal-icon').innerHTML = icon;
+      document.getElementById('modal-title').innerHTML = nombre;
+      
+      let html = '<ul class="space-y-6">';
+      funciones[id].forEach(f => {
+        html += `<li class="flex gap-4"><span class="text-[#00A3E0] text-3xl mt-1">•</span><span>${f}</span></li>`;
+      });
+      html += '</ul>';
+      document.getElementById('modal-content').innerHTML = html;
+      
+      document.getElementById('modal').classList.remove('hidden');
+      document.getElementById('modal').classList.add('flex');
+    }
+
+    function cerrarModal() {
+      const modal = document.getElementById('modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Cerrar con tecla Escape
+    document.addEventListener('keydown', e => { if (e.key === "Escape") cerrarModal(); });
+  </script>
+</body>
+</html>
